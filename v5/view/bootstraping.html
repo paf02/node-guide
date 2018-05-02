@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MY APP</title>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+  <script>
+    $(function() {
+      $('.populateBD').on('click', function(e) {
+        e.preventDefault();
+
+        deleteAllDocuments(['bootstrapingUser', 'bootstrapingCounter'], 0, function() {
+          preloadBD().counter.forEach(function(element, index) {
+            bdPost('bootstrapingCounter', element);
+          });
+
+          preloadBD().user.forEach(function(element, index) {
+            bdPost('bootstrapingUser', element);
+          });
+        });
+          
+      });
+
+      function deleteAllDocuments(endPointNames, pos, cb) {
+        $.ajax({
+          url: 'http://localhost:5000/api/v1/' + endPointNames[pos],
+          type: 'DELETE',
+          dataType: 'json',
+          cache : false,
+          // processData: false,
+          success: function(data, textStatus, jqXHR) {
+            // console.log("data = " + JSON.stringify(data));
+            // console.log("textStatus = " +textStatus);
+            // console.log("jqXHR = " + jqXHR);
+            console.log('Se borraron todos los de ' + endPointNames[pos] + ' :)');
+          }, error: function (jqXHR, textStatus, errorThrown) {
+            console.log("errorThrown = " );
+            console.log(errorThrown);
+            console.log(textStatus);
+            console.log(jqXHR);
+          }, complete: function () {
+            if (pos+1 < endPointNames.length) {
+              deleteAllDocuments(endPointNames, ++pos, cb);
+            } else {
+              cb();
+            }
+          }
+        });
+      }
+
+      function bdPost(endPointName, ele) {
+
+        var jsonData = JSON.stringify(ele);
+
+        $.ajax({
+          url: 'http://localhost:5000/api/v1/' + endPointName,
+          type: 'POST',
+          data: jsonData,
+          dataType: 'json',
+          contentType: "application/json; charset=utf-8",
+          cache : false,
+          // processData: false,
+          success: function(data, textStatus, jqXHR) {
+            // console.log("data = " + JSON.stringify(data));
+            // console.log("textStatus = " +textStatus);
+            // console.log("jqXHR = " + jqXHR);
+            console.log('data: ' + data);
+          }, error: function (jqXHR, textStatus, errorThrown) {
+            console.log("errorThrown = " );
+            console.log(errorThrown);
+            console.log(textStatus);
+            console.log(jqXHR);
+          }
+        });
+      }
+
+    });
+
+    function preloadBD() {
+      var collection = {};
+
+      collection.counter = [{
+        _id: 'userCode',
+        sequenceValue: 0
+      }, {
+        _id: 'movieId',
+        sequenceValue: 0
+      }];
+
+      collection.user = [{
+        name: 'pablo',
+        lastname: 'montero',
+        id: '114200452',
+        cel: '85916280',
+        email: 'pallito020390@hotmail.com',
+        likedMovies: [{
+          name: 'iron Man'
+        }, {
+          name: 'Capitan America'
+        }]
+      }, {
+        name: 'Marlon',
+        lastname: 'Ulate',
+        id: '6078666',
+        cel: '88234293',
+        email: 'marlonjuc@hotmail.com',
+        likedMovies: [{
+          name: 'Breakfast at Tiffany'
+        }, {
+          name: 'A Streetcar Named Desire'
+        }]
+      }, {
+        name: 'gustavo',
+        lastname: 'quiros',
+        id: '11520089',
+        cel: '83563275',
+        email: 'pabloselacome@gmail.com',
+        likedMovies: [{
+          name: 'One flew over the cuckoos nest'
+        }, {
+          name: 'Interstellar'
+        }]
+      }, {
+        name: 'Andrey',
+        lastname: 'Alfaro',
+        id: '202040576',
+        cel: '88107638',
+        email: 'andrey_alfaro@gmail.com',
+        likedMovies: [{
+          name: 'Fast & Furious'
+        }, {
+          name: 'X-men'
+        }]
+      }, {
+        name: 'alex',
+        lastname: 'Caravaca',
+        id: '112250678',
+        cel: '88714043',
+        email: 'caravacaNoSabeQueLosEmailNoSeRepiten@gmail.com',
+        likedMovies: [{
+          name: 'irenegade'
+        }, {
+          name: '300'
+        }]
+      }, {
+        name: 'diego',
+        lastname: 'alvare',
+        id: '401900388',
+        cel: '88293412',
+        email: 'pabloesgay@gmail.com',
+        likedMovies: [{
+          name: 'iAvengers'
+        }, {
+          name: '300'
+        }]
+      }];
+
+      return collection;
+    }
+
+  </script>
+</head>
+<body>
+  <ul class="nav">
+    <!-- <li><a href="get">get</a></li>
+    <li><a href="modify">modify - create - delete</a></li> -->
+  </ul>
+
+  <div> 
+    
+    <p>ID</p>
+    <input type="text" placeholder="id" name="id"><br>
+
+    <hr>
+
+
+    <p>Name</p>
+    <input type="text" placeholder="name" name="name"><br>
+    <p>lastName</p>
+    <input type="text" placeholder="lastname" name="lastname"><br>
+    
+    <p>resume</p>
+    <ul>
+      <li><input class="upload-input" type="file" ><br></li>
+    </ul>
+
+
+
+    <a href="#" class="create">create</a>
+    <a href="#" class="update">Update</a>
+    <a href="#" class="remove">remove</a>
+
+
+    <a href="#" class="populateBD">populate</a>
+  </div>
+</body>
+</html>

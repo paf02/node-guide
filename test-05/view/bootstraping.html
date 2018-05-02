@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MY APP</title>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+  <script>
+    $(function() {
+      $('.populateBD').on('click', function(e) {
+        e.preventDefault();
+
+        deleteAllDocuments(['bootstrapingKeeper', 'bootstrapingAnimal', 'bootstrapingCounter'], 0, function() {
+          preloadBD().counter.forEach(function(element, index) {
+            bdPost('bootstrapingCounter', element);
+          });
+
+          preloadBD().keeper.forEach(function(element, index) {
+            bdPost('bootstrapingKeeper', element);
+          });
+
+          preloadBD().lion.forEach(function(element, index) {
+            bdPost('bootstrapingAnimal', element);
+          });
+
+          preloadBD().tiger.forEach(function(element, index) {
+            bdPost('bootstrapingAnimal', element);
+          });
+
+          preloadBD().giraffe.forEach(function(element, index) {
+            bdPost('bootstrapingAnimal', element);
+          });
+        });
+          
+      });
+
+      function deleteAllDocuments(endPointNames, pos, cb) {
+        $.ajax({
+          url: 'http://localhost:5000/api/v1/' + endPointNames[pos],
+          type: 'DELETE',
+          dataType: 'json',
+          cache : false,
+          // processData: false,
+          success: function(data, textStatus, jqXHR) {
+            // console.log("data = " + JSON.stringify(data));
+            // console.log("textStatus = " +textStatus);
+            // console.log("jqXHR = " + jqXHR);
+            console.log('Se borraron todos los de ' + endPointNames[pos] + ' :)');
+          }, error: function (jqXHR, textStatus, errorThrown) {
+            console.log("errorThrown = " );
+            console.log(errorThrown);
+            console.log(textStatus);
+            console.log(jqXHR);
+          }, complete: function () {
+            if (pos+1 < endPointNames.length) {
+              deleteAllDocuments(endPointNames, ++pos, cb);
+            } else {
+              cb();
+            }
+          }
+        });
+      }
+
+      function bdPost(endPointName, ele) {
+        var jsonData = JSON.stringify(ele);
+
+        $.ajax({
+          url: 'http://localhost:5000/api/v1/' + endPointName,
+          type: 'POST',
+          data: jsonData,
+          dataType: 'json',
+          contentType: "application/json; charset=utf-8",
+          cache : false,
+          // processData: false,
+          success: function(data, textStatus, jqXHR) {
+            // console.log("data = " + JSON.stringify(data));
+            // console.log("textStatus = " +textStatus);
+            // console.log("jqXHR = " + jqXHR);
+            console.log('data: ' + data);
+          }, error: function (jqXHR, textStatus, errorThrown) {
+            console.log("errorThrown = " );
+            console.log(errorThrown);
+            console.log(textStatus);
+            console.log(jqXHR);
+          }
+        });
+      }
+
+    });
+
+    function preloadBD() {
+      var collection = {};
+
+      collection.counter = [{
+        _id: 'keeperCode',
+        sequenceValue: 0
+      }, {
+        _id: 'animalCode',
+        sequenceValue: 0
+      }];
+
+      collection.keeper = [{
+        name: 'pablo',
+        lastname: 'montero',
+      }, {
+        name: 'Marlon',
+        lastname: 'Ulate',
+      }, {
+        name: 'gustavo',
+        lastname: 'quiros',
+      }, {
+        name: 'Andrey',
+        lastname: 'Alfaro',
+      }, {
+        name: 'alex',
+        lastname: 'Caravaca',
+      }, {
+        name: 'diego',
+        lastname: 'alvarez',
+      }];
+
+
+      collection.lion = [{
+        name: 'leon00',
+        species: 'leon',
+      }, {
+        name: 'leon01',
+        species: 'leon',
+      }, {
+        name: 'leon02',
+        species: 'leon',
+      }, {
+        name: 'leon03',
+        species: 'leon',
+      }, {
+        name: 'leon04',
+        species: 'leon',
+      }, {
+        name: 'leon05',
+        species: 'leon',
+      }];
+
+      collection.tiger = [{
+        name: 'tigre00',
+        species: 'tigre',
+      }, {
+        name: 'tigre01',
+        species: 'tigre',
+      }, {
+        name: 'tigre02',
+        species: 'tigre',
+      }, {
+        name: 'tigre03',
+        species: 'tigre',
+      }, {
+        name: 'tigre04',
+        species: 'tigre',
+      }, {
+        name: 'tigre05',
+        species: 'tigre',
+      }];
+
+
+      collection.giraffe = [{
+        name: 'giraffe00',
+        species: 'jirafa',
+      }, {
+        name: 'giraffe01',
+        species: 'jirafa',
+      }, {
+        name: 'giraffe02',
+        species: 'jirafa',
+      }, {
+        name: 'giraffe03',
+        species: 'jirafa',
+      }, {
+        name: 'giraffe04',
+        species: 'jirafa',
+      }, {
+        name: 'giraffe05',
+        species: 'jirafa',
+      }];
+
+      return collection;
+    }
+
+  </script>
+</head>
+<body>
+  
+
+  <div> 
+    <a href="#" class="populateBD">populate</a>
+  </div>
+</body>
+</html>

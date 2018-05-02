@@ -1,0 +1,22 @@
+zoo
+
+3 animales
+	jirafa
+	leon
+	tigre
+
+
+NODE - home - animal 
+				about - numero total de animales x tipo
+				list - todos los animales x tipo 
+
+
+Cuidadores
+lista de todos los animales
+numero total de animales	
+
+
+NOTAS
+lean sobre virtuals le puede servir
+usar cors desde la dependencia no el script
+ENUM - para validar jirafa leon o tigre
